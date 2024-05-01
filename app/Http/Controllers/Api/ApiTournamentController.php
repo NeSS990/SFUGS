@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Tournament;
 
-class ApiTournamentController extends Controller
+class ApiTournamentController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -37,11 +38,17 @@ class ApiTournamentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function getTournamentsByGame($gameId)
-    {
+{
+    try {
         // Получаем турниры по указанной игре
         $tournaments = Tournament::where('game_id', $gameId)->get();
         return response()->json($tournaments);
+    } catch (\Exception $e) {
+        // Обработка исключения
+        return response()->json(['error' => 'Failed to retrieve tournaments'], 500);
     }
+}
+
 
     /**
      * Store a newly created resource in storage.

@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Api\ApiGameController;
+use App\Http\Controllers\Api\ApiTournamentController;
 
 /*
 |--------------------------------------------------------------------------
