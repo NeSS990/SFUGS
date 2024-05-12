@@ -4,6 +4,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Api\ApiGameController;
 use App\Http\Controllers\Api\ApiTournamentController;
+use App\Http\Controllers\Api\ApiRegisterController; 
+use App\Http\Controllers\Api\ApiLoginController; 
+
 
 /*
 |--------------------------------------------------------------------------
@@ -23,3 +26,5 @@ Route::get('/games/{gameId}/tournaments', [ApiTournamentController::class, 'getT
 Route::apiResources([
     'games'=>ApiGameController::class,
 ]);
+Route::post('/register', [ApiRegisterController::class, 'store']);
+Route::post('/login', [ApiLoginController::class, 'login']);
