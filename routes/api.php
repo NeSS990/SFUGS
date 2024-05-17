@@ -3,9 +3,11 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Api\ApiGameController;
-use App\Http\Controllers\Api\ApiTournamentController;
+use Api\ApiTournamentController;
 use App\Http\Controllers\Api\ApiRegisterController; 
-use App\Http\Controllers\Api\ApiLoginController; 
+use App\Http\Controllers\Api\ApiLoginController;
+use App\Http\Controllers\Api\ApiUserController;
+use App\Http\Controllers\Api\ApiAuthController;    
 
 
 /*
@@ -19,12 +21,14 @@ use App\Http\Controllers\Api\ApiLoginController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
 Route::get('/games/{gameId}/tournaments', [ApiTournamentController::class, 'getTournamentsByGame']);
 Route::apiResources([
     'games'=>ApiGameController::class,
+    'tournaments'=>ApiTournamentController::class,
 ]);
-Route::post('/register', [ApiRegisterController::class, 'store']);
-Route::post('/login', [ApiLoginController::class, 'login']);
+Route::post('/register', [ApiAuthController::class, 'register']);
+Route::post('/login', [ApiAuthController::class, 'login']);
+Route::group(['middleware'=>['auth:sanctum']], function(){
+    Route::get('/user', [ApiAuthController::class, 'user']);
+    Route::post('/logout', [ApiAuthController::class, 'logout']);
+});
