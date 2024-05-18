@@ -1,13 +1,13 @@
 <?php
 
+use App\Http\Controllers\Api\ApiGameController;
+use App\Http\Controllers\Api\ApiTournamentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Api\ApiGameController;
-use Api\ApiTournamentController;
-use App\Http\Controllers\Api\ApiRegisterController; 
+use App\Http\Controllers\Api\ApiRegisterController;
 use App\Http\Controllers\Api\ApiLoginController;
 use App\Http\Controllers\Api\ApiUserController;
-use App\Http\Controllers\Api\ApiAuthController;    
+use App\Http\Controllers\Api\ApiAuthController;
 
 
 /*

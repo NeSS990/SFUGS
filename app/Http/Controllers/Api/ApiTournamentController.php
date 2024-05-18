@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Participation;
 use Illuminate\Http\Request;
 use App\Models\Tournament;
+use mysql_xdevapi\Exception;
 
 class ApiTournamentController extends ApiController
 {
@@ -17,6 +19,28 @@ class ApiTournamentController extends ApiController
     {
         // Возвращаем все турниры
         return Tournament::all();
+    }
+
+    public function createParc(int $user_id, int $tour_id)
+    {
+        try {
+            // Проверка на существование записи
+            $existingParticipation = Participation::where('user_id', $user_id)
+                ->where('tournament_id', $tour_id)
+                ->first();
+
+            // Если запись уже существует, вернуть ошибку
+            if ($existingParticipation) {
+                return response()->json(['error' => 'Participation already exists'], 409);
+            }
+
+            // Создание новой записи
+            Participation::create(['user_id' => $user_id, 'tour_id' => $tour_id]);
+
+            return response()->json(['success' => 'Participation created successfully'], 201);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to add Participation'], 500);
+        }
     }
 
     /**
