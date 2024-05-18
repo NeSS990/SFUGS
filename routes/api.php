@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\ApiGameController;
+use Api\ApiGameController;
 use App\Http\Controllers\Api\ApiTournamentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +22,7 @@ use App\Http\Controllers\Api\ApiAuthController;
 */
 
 Route::get('/games/{gameId}/tournaments', [ApiTournamentController::class, 'getTournamentsByGame']);
+Route::get('/tournaments/{tournamentId}', [ApiTournamentController::class, 'show']);    
 Route::apiResources([
     'games'=>ApiGameController::class,
     'tournaments'=>ApiTournamentController::class,
