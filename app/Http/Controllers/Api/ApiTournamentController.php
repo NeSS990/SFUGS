@@ -21,8 +21,10 @@ class ApiTournamentController extends ApiController
         return Tournament::all();
     }
 
-    public function createParc(int $user_id, int $tour_id)
+    public function createParc(Request $request)
     {
+        $user_id = $request->input('user_id');
+        $tour_id = $request->input('tournament_id');
         try {
             // Проверка на существование записи
             $existingParticipation = Participation::where('user_id', $user_id)

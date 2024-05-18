@@ -22,11 +22,12 @@ use App\Http\Controllers\Api\ApiAuthController;
 */
 
 Route::get('/games/{gameId}/tournaments', [ApiTournamentController::class, 'getTournamentsByGame']);
-Route::get('/tournaments/{tournamentId}', [ApiTournamentController::class, 'show']);    
+Route::get('/tournaments/{tournamentId}', [ApiTournamentController::class, 'show']);
 Route::apiResources([
     'games'=>ApiGameController::class,
     'tournaments'=>ApiTournamentController::class,
 ]);
+Route::post('/tournaments/{tournamentId}/participation', [ApiTournamentController::class, 'createParc']);
 Route::post('/register', [ApiAuthController::class, 'register']);
 Route::post('/login', [ApiAuthController::class, 'login']);
 Route::group(['middleware'=>['auth:sanctum']], function(){
