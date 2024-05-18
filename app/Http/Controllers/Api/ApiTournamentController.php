@@ -35,9 +35,9 @@ class ApiTournamentController extends ApiController
             }
 
             // Создание новой записи
-            Participation::create(['user_id' => $user_id, 'tour_id' => $tour_id]);
+            Participation::create(['user_id' => $user_id, 'tournament_id' => $tour_id]);
 
-            return response()->json(['success' => 'Participation created successfully'], 201);
+            return response()->json(['success' => 'Participation created successfully'], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to add Participation'], 500);
         }
