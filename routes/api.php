@@ -5,7 +5,7 @@ use App\Http\Controllers\Api\ApiTournamentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ApiRegisterController;
-use App\Http\Controllers\Api\ApiLoginController;
+use App\Http\Controllers\Api    \ApiLoginController;
 use App\Http\Controllers\Api\ApiUserController;
 use App\Http\Controllers\Api\ApiAuthController;
 
@@ -23,6 +23,7 @@ use App\Http\Controllers\Api\ApiAuthController;
 
 Route::get('/games/{gameId}/tournaments', [ApiTournamentController::class, 'getTournamentsByGame']);
 Route::get('/tournaments/{tournamentId}', [ApiTournamentController::class, 'show']);
+Route::get('/user/{userId}/tournaments', [ApiUserController::class, 'getUserTournaments']);
 Route::apiResources([
     'games'=>ApiGameController::class,
     'tournaments'=>ApiTournamentController::class,

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Participation;
 
 class ApiUserController extends Controller
 {
@@ -37,6 +38,25 @@ class ApiUserController extends Controller
     {
         return response(['user'=>auth()->user()], 200);
     }
+    // ApiUserController.php
+
+    public function getUserTournaments($userId)
+    {
+        try {
+            $participations = Participation::with('tournament')
+                ->where('user_id', $userId)
+                ->get();
+
+            $tournaments = $participations->map(function ($participation) {
+                return $participation->tournament;
+            });
+
+            return response()->json($tournaments, 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to fetch tournaments'], 500);
+        }
+    }
+
 
 
     /**
