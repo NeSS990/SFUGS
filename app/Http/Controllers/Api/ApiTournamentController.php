@@ -27,8 +27,9 @@ class ApiTournamentController extends ApiController
         $title = $request->input("title");
         $game_id = $request->input("game_id");
         $description = $request->input("description");
-        $logo = $request->input("logo");
-        $background = $request->input("background");
+        $logo = $request->file("logo");
+        $background = $request->file("background");
+
         try {
             // Проверка на существование записи
             $existingTour = Tournament::where('game_id', $game_id)
@@ -40,8 +41,28 @@ class ApiTournamentController extends ApiController
                 return response()->json(['error' => 'Tournament already exists'], 409);
             }
 
+            // Обработка логотипа
+            $logoFilename = $logo->getClientOriginalName();
+            $logo->move(storage_path('app/public/img/tournament/origin'), $logoFilename);
+            $logoThumbnail = Image::make(storage_path('app/public/img/tournament/origin/' . $logoFilename));
+            $logoThumbnail->fit(300, 300);
+            $logoThumbnail->save(storage_path('app/public/img/tournament/thumbnail/' . $logoFilename));
+
+            // Обработка фона
+            $backgroundFilename = $background->getClientOriginalName();
+            $background->move(storage_path('app/public/img/tournament/origin'), $backgroundFilename);
+            $backgroundThumbnail = Image::make(storage_path('app/public/img/tournament/origin/' . $backgroundFilename));
+            $backgroundThumbnail->fit(300, 300);
+            $backgroundThumbnail->save(storage_path('app/public/img/tournament/thumbnail/' . $backgroundFilename));
+
             // Создание новой записи
-            Tournament::create(['title' => $title, '$game_id' => $game_id, 'description' => $description, 'logo' => $logo, 'background' => $background]);
+            Tournament::create([
+                'title' => $title,
+                'game_id' => $game_id,
+                'description' => $description,
+                'logo' => $logoFilename,
+                'background' => $backgroundFilename
+            ]);
 
             return response()->json(['success' => 'Tournament created successfully'], 200);
         } catch (\Exception $e) {

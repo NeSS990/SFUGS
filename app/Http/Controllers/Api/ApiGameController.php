@@ -73,20 +73,36 @@ class ApiGameController extends ApiController
         $title = $request->input("title");
         $genre_id = $request->input("genre_id");
         $description = $request->input("description");
-        $image = $request->input("image");
+        $image = $request->file("image");
+
         try {
-            // Проверка на существование записи
             $existingGame = Game::where('genre_id', $genre_id)
                 ->where('title', $title)
                 ->first();
 
-            // Если запись уже существует, вернуть ошибку
             if ($existingGame) {
                 return response()->json(['error' => 'Game already exists'], 409);
             }
 
-            // Создание новой записи
-            Game::create(['title' => $title, 'genre_id' => $genre_id, 'description' => $description, 'image' => $image]);
+            // Обработка изображения
+            if ($image) {
+                $imageFilename = $image->getClientOriginalName();
+                $imagePath = $image->storeAs('public/img/games/origin', $imageFilename);
+                $thumbnailPath = storage_path('app/public/img/games/thumbnail/' . $imageFilename);
+
+                $thumbnail = Image::make(storage_path('app/public/img/games/origin/' . $imageFilename));
+                $thumbnail->fit(250, 250);
+                $thumbnail->save($thumbnailPath);
+
+                $imageFilename = str_replace('public/', '', $imagePath); // Убираем 'public/' из пути для сохранения в базе данных
+            }
+
+            Game::create([
+                'title' => $title,
+                'genre_id' => $genre_id,
+                'description' => $description,
+                'image' => $imageFilename ?? null
+            ]);
 
             return response()->json(['success' => 'Game created successfully'], 200);
         } catch (\Exception $e) {
