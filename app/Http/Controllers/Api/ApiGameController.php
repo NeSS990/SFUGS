@@ -67,4 +67,30 @@ class ApiGameController extends ApiController
     {
         //
     }
+
+    public function create(Request $request)
+    {
+        $title = $request->input("title");
+        $genre_id = $request->input("genre_id");
+        $description = $request->input("description");
+        $image = $request->input("image");
+        try {
+            // Проверка на существование записи
+            $existingGame = Game::where('genre_id', $genre_id)
+                ->where('title', $title)
+                ->first();
+
+            // Если запись уже существует, вернуть ошибку
+            if ($existingGame) {
+                return response()->json(['error' => 'Game already exists'], 409);
+            }
+
+            // Создание новой записи
+            Game::create(['title' => $title, 'genre_id' => $genre_id, 'description' => $description, 'image' => $image]);
+
+            return response()->json(['success' => 'Game created successfully'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to add Game'], 500);
+        }
+    }
 }

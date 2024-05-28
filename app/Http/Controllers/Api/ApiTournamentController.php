@@ -21,6 +21,35 @@ class ApiTournamentController extends ApiController
         return Tournament::all();
     }
 
+
+    public function createTour(Request $request)
+    {
+        $title = $request->input("title");
+        $game_id = $request->input("game_id");
+        $description = $request->input("description");
+        $logo = $request->input("logo");
+        $background = $request->input("background");
+        try {
+            // Проверка на существование записи
+            $existingTour = Tournament::where('game_id', $game_id)
+                ->where('title', $title)
+                ->first();
+
+            // Если запись уже существует, вернуть ошибку
+            if ($existingTour) {
+                return response()->json(['error' => 'Tournament already exists'], 409);
+            }
+
+            // Создание новой записи
+            Tournament::create(['title' => $title, '$game_id' => $game_id, 'description' => $description, 'logo' => $logo, 'background' => $background]);
+
+            return response()->json(['success' => 'Tournament created successfully'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to add Tournament'], 500);
+        }
+    }
+
+
     public function createParc(Request $request)
     {
         $user_id = $request->input('user_id');
